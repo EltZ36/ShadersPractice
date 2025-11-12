@@ -19,4 +19,17 @@ const simpleSketch = (p) => {
   };
 };
 
+const lineSketch = (p) => {
+  var lineShader;
+
+  p.setup = () => {
+    p.createCanvas(400, 400);
+  };
+
+  p.draw = () => {
+    p.background(220);
+  };
+};
+
 new p5(simpleSketch, "simpleSketchCanvas");
+new p5(lineSketch, "lineSketchCanvas");
