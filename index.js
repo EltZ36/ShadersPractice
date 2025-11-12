@@ -1,17 +1,22 @@
 //shader setup based off of https://github.com/aferriss/p5jsShaderExamples/blob/gh-pages/1_basics/1-1_red/sketch.js
-var simpleShader;
 
-async function setup() {
-  simpleShader = await loadShader(
-    "./vertexShaders/color.vert",
-    "./fragShaders/color.frag"
-  );
-  createCanvas(400, 400, WEBGL);
-}
+const simpleSketch = (p) => {
+  var simpleShader;
 
-function draw() {
-  background(220);
-  ellipse(0, 0, 50, 50);
-  shader(simpleShader);
-  simpleShader.setUniform("u_time", millis() / 1000.0);
-}
+  p.setup = async () => {
+    simpleShader = await p.loadShader(
+      "./vertexShaders/color.vert",
+      "./fragShaders/color.frag"
+    );
+    p.createCanvas(400, 400, p.WEBGL);
+  };
+
+  p.draw = () => {
+    p.background(220);
+    p.ellipse(0, 0, 50, 50);
+    p.shader(simpleShader);
+    simpleShader.setUniform("u_time", p.millis() / 1000.0);
+  };
+};
+
+new p5(simpleSketch, "simpleSketchCanvas");
