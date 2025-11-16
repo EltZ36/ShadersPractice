@@ -6,12 +6,11 @@ const simpleSketch = (p) => {
 
   p.setup = async () => {
     p.createCanvas(400, 400, p.WEBGL);
+    p.background(220);
     simpleShader = await p.loadShader(
       "./vertexShaders/color.vert",
       "./fragShaders/color.frag"
     );
-    p.shader(simpleShader);
-
     /*additionalShader = await p.loadShader(
       "./vertexShaders/color.vert",
       "./fragShaders/altcolor.frag"
@@ -19,21 +18,48 @@ const simpleSketch = (p) => {
   };
 
   p.draw = () => {
-    p.background(220);
-    p.ellipse(0, 0, 50, 50);
-    p.ellipse(0, 40, 40, 40);
-    p.ellipse(-40, 0, 40, 40);
-    p.ellipse(40, 0, 40, 40);
-    p.ellipse(0, -40, 40, 40);
+    //p.stroke(0);
+    p.noStroke();
+    var ellipseX = 0;
+    var ellipseY = 0;
+    var ellipseWidth = 40;
+    var ellipseHeight = 40;
+    p.fill(255, 192, 203);
+    //outer flowers
+    p.ellipse(ellipseX, ellipseY + 40, ellipseWidth + 10, ellipseHeight + 10);
+    p.ellipse(ellipseX - 40, ellipseY, ellipseWidth + 10, ellipseHeight + 10);
+    p.ellipse(ellipseX + 40, ellipseY, ellipseWidth + 10, ellipseHeight + 10);
+    p.ellipse(ellipseX, ellipseY - 40, ellipseWidth + 10, ellipseHeight + 10);
+    p.fill(255, 255, 255);
+    p.ellipse(ellipseX - 20, ellipseY, ellipseWidth - 10, ellipseHeight);
+    p.ellipse(ellipseX, ellipseY + 20, ellipseWidth - 10, ellipseHeight - 8);
+    p.ellipse(ellipseX, ellipseY - 20, ellipseWidth - 10, ellipseHeight - 8);
+    p.ellipse(ellipseX + 20, ellipseY, ellipseWidth - 10, ellipseHeight);
+
+    //center of the flower
     p.shader(simpleShader);
-    p.strokeWeight(8);
+    p.ellipse(ellipseX, ellipseY, ellipseWidth + 10, ellipseHeight + 10);
     p.stroke(0);
-    p.point(-24, 0);
-    p.point(-50, 200);
-    p.stroke(255, 0, 0);
     p.strokeWeight(2);
-    p.spline(-100, 0, -24, 0, -50, 200, -70, 200);
-    simpleShader.setUniform("u_time", p.millis() / 1000.0);
+    var splineX1 = -15;
+    var splineY1 = 15;
+    var splineX2 = -30;
+    var splineY2 = 50;
+    var splineX3 = -30;
+    var splineY3 = 200;
+    var splineX4 = -30;
+    var splineY4 = 200;
+    p.spline(
+      splineX1,
+      splineY1,
+      splineX2,
+      splineY2,
+      splineX3,
+      splineY3,
+      splineX4,
+      splineY4
+    );
+    simpleShader.setUniform("u_time", p.millis() / 5000.0);
     //additionalShader.setUniform("u_time", p.millis() / 1000.0);
   };
 };
