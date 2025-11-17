@@ -5,6 +5,7 @@
 // attribute signals that this is a global variable sent by the sketch
 // it is read only, meaning it cannot be changed directly (you can copy it though)
 // attributes exist in vertex shaders only
+uniform vec2 u_resolution;
 attribute vec3 aPosition;
 
 

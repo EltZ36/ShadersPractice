@@ -3,64 +3,63 @@
 const simpleSketch = (p) => {
   var simpleShader;
   var additionalShader;
+  const flowerColorArray = ["#FFC0CB", "#FFFFFF"];
+  const ellipseWidth = 40;
+  const ellipseHeight = 40;
 
   p.setup = async () => {
     p.createCanvas(400, 400, p.WEBGL);
     p.background(220);
-    simpleShader = await p.loadShader(
+    p.blendMode(p.BLEND);
+    flowerTimeShader = await p.loadShader(
       "./vertexShaders/color.vert",
       "./fragShaders/color.frag"
     );
-    /*additionalShader = await p.loadShader(
-      "./vertexShaders/color.vert",
-      "./fragShaders/altcolor.frag"
-    );*/
   };
 
   p.draw = () => {
-    //p.stroke(0);
-    p.noStroke();
-    var ellipseX = 0;
-    var ellipseY = 0;
-    var ellipseWidth = 40;
-    var ellipseHeight = 40;
-    p.fill(255, 192, 203);
-    //outer flowers
-    p.ellipse(ellipseX, ellipseY + 40, ellipseWidth + 10, ellipseHeight + 10);
-    p.ellipse(ellipseX - 40, ellipseY, ellipseWidth + 10, ellipseHeight + 10);
-    p.ellipse(ellipseX + 40, ellipseY, ellipseWidth + 10, ellipseHeight + 10);
-    p.ellipse(ellipseX, ellipseY - 40, ellipseWidth + 10, ellipseHeight + 10);
-    p.fill(255, 255, 255);
-    p.ellipse(ellipseX - 20, ellipseY, ellipseWidth - 10, ellipseHeight);
-    p.ellipse(ellipseX, ellipseY + 20, ellipseWidth - 10, ellipseHeight - 8);
-    p.ellipse(ellipseX, ellipseY - 20, ellipseWidth - 10, ellipseHeight - 8);
-    p.ellipse(ellipseX + 20, ellipseY, ellipseWidth - 10, ellipseHeight);
+    p.drawFlower(ellipseWidth, ellipseHeight, flowerTimeShader);
+    flowerTimeShader.setUniform("u_time", p.millis() / 4000.0);
+  };
 
-    //center of the flower
-    p.shader(simpleShader);
-    p.ellipse(ellipseX, ellipseY, ellipseWidth + 10, ellipseHeight + 10);
-    p.stroke(0);
-    p.strokeWeight(2);
-    var splineX1 = -15;
-    var splineY1 = 15;
-    var splineX2 = -30;
-    var splineY2 = 50;
-    var splineX3 = -30;
-    var splineY3 = 200;
-    var splineX4 = -30;
-    var splineY4 = 200;
-    p.spline(
-      splineX1,
-      splineY1,
-      splineX2,
-      splineY2,
-      splineX3,
-      splineY3,
-      splineX4,
-      splineY4
-    );
-    simpleShader.setUniform("u_time", p.millis() / 5000.0);
-    //additionalShader.setUniform("u_time", p.millis() / 1000.0);
+  //next: make the flower more dynamic and be able to be copied and drawn in different locations
+  p.drawFlower = (ellipseWidth, ellipseHeight, flowerShader) => {
+    //p.noStroke();
+    const ellipseSize = 100;
+    const numPetals = 8;
+    const sizeToDivide = 2;
+    const circles = [
+      [0, ellipseSize, ellipseSize, numPetals],
+      [
+        1,
+        ellipseSize / sizeToDivide,
+        ellipseSize / sizeToDivide,
+        numPetals / sizeToDivide,
+      ],
+    ];
+
+    circles.forEach(([colorIdx, dx, dy, petals]) => {
+      p.fill(flowerColorArray[colorIdx]);
+      p.drawCircle(
+        ellipseWidth + dx,
+        ellipseHeight + dy,
+        petals,
+        p.PI,
+        sizeToDivide
+      );
+    });
+
+    p.shader(flowerShader);
+    p.strokeWeight(0.5);
+  };
+
+  p.drawCircle = (w, h, num_points, angle, sizeToDivide) => {
+    //evenly spaced circles from https://www.alpharithms.com/evenly-spacing-objects-around-a-circle-in-p5js-processing-180222/
+    for (let i = angle; i < p.TWO_PI + angle; i += p.TWO_PI / num_points) {
+      let x = (w / sizeToDivide) * Math.cos(i) + 0 / sizeToDivide;
+      let y = (h / sizeToDivide) * Math.sin(i) + 0 / sizeToDivide;
+      p.ellipse(x, y, w, h);
+    }
   };
 };
 
