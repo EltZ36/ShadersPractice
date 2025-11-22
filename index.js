@@ -66,12 +66,23 @@ const simpleSketch = (p) => {
 const lineSketch = (p) => {
   var lineShader;
 
-  p.setup = () => {
-    p.createCanvas(400, 400);
+  p.setup = async () => {
+    p.createCanvas(400, 400, p.WEBGL);
+    lineShader = await p.loadShader(
+      "./vertexShaders/plotLine.vert",
+      "./fragShaders/plotLine.frag"
+    );
   };
 
   p.draw = () => {
+    //lines 79 to 81 from https://github.com/leahoppe/p5js-shader-examples/blob/gh-pages/3_uniforms/3-1_mouse/sketch.js
+    var mx = p.map(p.mouseX, 0, p.width, 0, 1);
+    var my = p.map(p.mouseY, 0, p.height, 0, 1);
     p.background(220);
+    p.shader(lineShader);
+    lineShader.setUniform("u_mouse", [mx, my]);
+    lineShader.setUniform("u_resolution", [p.width, p.height]);
+    p.plane(1, 1);
   };
 };
 
