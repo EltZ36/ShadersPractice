@@ -1,8 +1,7 @@
 //shader setup based off of https://github.com/aferriss/p5jsShaderExamples/blob/gh-pages/1_basics/1-1_red/sketch.js
 
 const simpleSketch = (p) => {
-  var simpleShader;
-  var additionalShader;
+  let flowerTimeShader;
   const flowerColorArray = ["#FFC0CB", "#FFFFFF"];
   const ellipseWidth = 40;
   const ellipseHeight = 40;
@@ -64,7 +63,7 @@ const simpleSketch = (p) => {
 };
 
 const lineSketch = (p) => {
-  var lineShader;
+  let lineShader;
 
   p.setup = async () => {
     p.createCanvas(400, 400, p.WEBGL);
@@ -76,8 +75,8 @@ const lineSketch = (p) => {
 
   p.draw = () => {
     //lines 79 to 81 from https://github.com/leahoppe/p5js-shader-examples/blob/gh-pages/3_uniforms/3-1_mouse/sketch.js
-    var mx = p.map(p.mouseX, 0, p.width, 0, 1);
-    var my = p.map(p.mouseY, 0, p.height, 0, 1);
+    let mx = p.map(p.mouseX, 0, p.width, 0, 1);
+    let my = p.map(p.mouseY, 0, p.height, 0, 1);
     p.background(220);
     p.shader(lineShader);
     lineShader.setUniform("u_mouse", [mx, my]);
@@ -86,5 +85,26 @@ const lineSketch = (p) => {
   };
 };
 
+const gradientSketch = (p) => {
+  let gradientShader;
+
+  p.setup = async () => {
+    p.createCanvas(400, 400, p.WEBGL);
+    gradientShader = await p.loadShader(
+      "./vertexShaders/gradient.vert",
+      "./fragShaders/gradient.frag"
+    );
+  };
+
+  p.draw = () => {
+    p.background(220);
+    p.shader(gradientShader);
+    gradientShader.setUniform("u_resolution", [p.width, p.height]);
+    gradientShader.setUniform("u_time", p.millis() / 1000.0);
+    p.plane(1, 1);
+  };
+};
+
 new p5(simpleSketch, "simpleSketchCanvas");
 new p5(lineSketch, "lineSketchCanvas");
+new p5(gradientSketch, "gradientSketchCanvas");
