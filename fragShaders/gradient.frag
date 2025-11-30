@@ -15,6 +15,10 @@ float easeInElastic(float x){
     : 0.5 * sin(-13.0 * PI * ((2.0 * x - 1.0) + 1.0)) * pow(2.0, -10.0 * (2.0 * x - 1.0)) + 1.0;
 }
 
+float easeInSine(float x){
+    return 1.0 - cos((x * PI) / 2.0);
+}
+
 
 void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
@@ -25,9 +29,9 @@ void main() {
     vec3 startColor = vec3(0.149,0.141,0.912);
     vec3 endColor = vec3(2.000,0.833,0.224);
 
-    //vec3 mixedColor = mix(startColor, endColor, pct * 0.78);
     vec3 mixedColor = mix(startColor, endColor, pct * 0.78);
-    //shift the gradient to darker palette using easing function
+    vec3 blackColor = vec3(0.0, 0.0, 0.0);
+    mixedColor = mix(mixedColor, blackColor, easeInSine(st.x + (u_time * 0.5)));
 
-    gl_FragColor = vec4(mixedColor, sin(u_time));
+    gl_FragColor = vec4(mixedColor, 1.0);
 }  
