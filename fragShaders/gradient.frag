@@ -25,9 +25,9 @@ void main() {
     vec3 startColor = vec3(0.149,0.141,0.912);
     vec3 endColor = vec3(2.000,0.833,0.224);
 
-    vec3 mixedColor = mix(startColor, endColor, pct);
-    
-    //color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
+    //vec3 mixedColor = mix(startColor, endColor, pct * 0.78);
+    vec3 mixedColor = mix(startColor, endColor, pct * 0.78);
+    //shift the gradient to darker palette using easing function
 
-    gl_FragColor = vec4(mixedColor,2.0);
+    gl_FragColor = vec4(mixedColor, sin(u_time));
 }  

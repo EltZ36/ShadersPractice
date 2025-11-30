@@ -1,4 +1,3 @@
-uniform float u_time;
 attribute vec3 aPosition;
 
 void main(){
