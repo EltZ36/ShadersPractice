@@ -7,33 +7,27 @@ precision mediump float;
 #define PI 3.14159265359
 
 uniform vec2 u_resolution;
-uniform vec2 u_time;
+uniform float u_time;
 
 float easeInElastic(float x){
-    const c4 = ( 2 * PI) / 3.0;
-
-    if(x == 0){
-        return 0.0;
-    }
-    else if(x == 1){
-        return 1;
-    }
-    else{
-        return -pow(2.0, 10.0 * x - 10) * sin((x * 10 * 10.75) * c4)
-    }
+    return x < 0.5
+    ? 0.5 * sin(+13.0 * PI * 2.0 * x) * pow(2.0, 10.0 * (2.0 * x - 1.0))
+    : 0.5 * sin(-13.0 * PI * ((2.0 * x - 1.0) + 1.0)) * pow(2.0, -10.0 * (2.0 * x - 1.0)) + 1.0;
 }
 
 
 void main() {
-    vec2 st = gl_FragCoord.xy/u_resolution;
+    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+
+    vec3 pct = vec3(st.x);
 
     //do the challenge for the style sunset;
-    vec3 startColor = vec3(0.0,0.0,0.0);
-    vec3 endColor  = vec3(0.0,0.0,0.0);
+    vec3 startColor = vec3(0.149,0.141,0.912);
+    vec3 endColor = vec3(2.000,0.833,0.224);
 
-    vec3 mixedColor = vec3(0.0,0.0,0.0);
+    vec3 mixedColor = mix(startColor, endColor, pct);
     
-    color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
+    //color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
 
-    gl_FragColor = vec4(color,1.0);
-} 
+    gl_FragColor = vec4(mixedColor,2.0);
+}  
