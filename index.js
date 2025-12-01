@@ -105,6 +105,27 @@ const gradientSketch = (p) => {
   };
 };
 
+const shapeSketch = (p) => {
+  let shapeShader;
+
+  p.setup = async () => {
+    p.createCanvas(400, 400, p.WEBGL);
+    shapeShader = await p.loadShader(
+      "./vertexShaders/shape.vert",
+      "./fragShaders/shape.frag"
+    );
+  };
+
+  p.draw = () => {
+    p.background(220);
+    p.shader(shapeShader);
+    shapeShader.setUniform("u_resolution", [p.width, p.height]);
+    shapeShader.setUniform("u_time", p.millis() / 3000.0);
+    p.plane(1, 1);
+  };
+};
+
 new p5(simpleSketch, "simpleSketchCanvas");
 new p5(lineSketch, "lineSketchCanvas");
 new p5(gradientSketch, "gradientSketchCanvas");
+new p5(shapeSketch, "shapeSketchCanvas");
