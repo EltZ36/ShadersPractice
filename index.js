@@ -125,7 +125,28 @@ const shapeSketch = (p) => {
   };
 };
 
+//could do this to make the other shape sketche move and include a button to toggle movement
+const matrixSketch = (p) => {
+  let matrixShader;
+
+  p.setup = async () => {
+    p.createCanvas(400, 400, p.WEBGL);
+    matrixShader = await p.loadShader(
+      "./vertexShaders/matrix.vert",
+      "./fragShaders/matrix.frag"
+    );
+  };
+  p.draw = () => {
+    p.background(220);
+    p.shader(matrixShader);
+    matrixShader.setUniform("u_resolution", [p.width, p.height]);
+    matrixShader.setUniform("u_time", p.millis() / 3000.0);
+    p.plane(1, 1);
+  };
+};
+
 new p5(simpleSketch, "simpleSketchCanvas");
 new p5(lineSketch, "lineSketchCanvas");
 new p5(gradientSketch, "gradientSketchCanvas");
 new p5(shapeSketch, "shapeSketchCanvas");
+new p5(matrixSketch, "matrixSketchCanvas");
