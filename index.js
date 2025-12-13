@@ -145,8 +145,28 @@ const matrixSketch = (p) => {
   };
 };
 
+const RotationSketch = (p) => {
+  let rotationShader;
+
+  p.setup = async () => {
+    p.createCanvas(400, 400, p.WEBGL);
+    rotationShader = await p.loadShader(
+      "./vertexShaders/rotation.vert",
+      "./fragShaders/rotation.frag"
+    );
+  };
+  p.draw = () => {
+    p.background(220);
+    p.shader(rotationShader);
+    rotationShader.setUniform("u_resolution", [p.width, p.height]);
+    rotationShader.setUniform("u_time", p.millis() / 3000.0);
+    p.plane(1, 1);
+  };
+};
+
 new p5(simpleSketch, "simpleSketchCanvas");
 new p5(lineSketch, "lineSketchCanvas");
 new p5(gradientSketch, "gradientSketchCanvas");
 new p5(shapeSketch, "shapeSketchCanvas");
 new p5(matrixSketch, "matrixSketchCanvas");
+new p5(RotationSketch, "rotationSketchCanvas");
