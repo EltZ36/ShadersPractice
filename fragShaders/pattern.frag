@@ -2,6 +2,8 @@
 precision mediump float;
 #endif
 
+#define PI 3.14159265359
+
 uniform vec2 u_resolution;
 uniform float u_time;
 
@@ -27,12 +29,18 @@ float box(vec2 _st, vec2 _size, float _smoothEdges){
     return uv.x*uv.y;
 }
 
+mat2 rotate2d(float _angle){
+    return mat2(cos(_angle),-sin(_angle),
+                sin(_angle),cos(_angle));
+}
+
 void main() {
 	vec2 st = gl_FragCoord.xy/u_resolution;
     vec3 color = vec3(0.0);
 
     st = createTile(st, 3.0, 3.0);
     vec2 st2 = createTile(st, 3.0, 3.0);
+    st2 = rotate2d(cos(u_time) / PI) * st2;
     color = vec3(circle(st,0.364));
     vec3 color2 = vec3(circle(st2, 0.2));
     //vec3 color2 = vec3(box(st,vec2(0.920,0.890),0.01));
