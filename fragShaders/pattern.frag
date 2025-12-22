@@ -7,8 +7,8 @@ precision mediump float;
 uniform vec2 u_resolution;
 uniform float u_time;
 
-float circle(in vec2 _st, in float _radius){
-    vec2 l = _st-vec2(0.5);
+float circle(vec2 _st, float _radius, float circleX, float circleY){
+    vec2 l = _st-vec2(circleX, circleY);
     return 1.-smoothstep(_radius-(_radius*0.01),
                          _radius+(_radius*0.01),
                          dot(l,l)*4.0);
@@ -29,34 +29,6 @@ float box(vec2 _st, vec2 _size, float _smoothEdges){
     return uv.x*uv.y;
 }
 
-mat2 rotate2d(float _angle){
-    return mat2(cos(_angle),-sin(_angle),
-                sin(_angle),cos(_angle));
-}
-
-void main() {
-	vec2 st = gl_FragCoord.xy/u_resolution;
-    vec3 color = vec3(0.0);
-
-    st = createTile(st, 3.0, 3.0);
-    vec2 st2 = createTile(st, 3.0, 3.0);
-    st2 = rotate2d(cos(u_time) / PI) * st2;
-    color = vec3(circle(st,0.364));
-    vec3 color2 = vec3(circle(st2, 0.2));
-    //vec3 color2 = vec3(box(st,vec2(0.920,0.890),0.01));
-	gl_FragColor = vec4((vec3(0.450,0.600,0.324) + color) * (vec3(0.865,0.297,0.239) + color2),1.0);
-}
-
-/*
-#ifdef GL_ES
-precision mediump float;
-#endif
-
-#define PI 3.14159265358979323846
-
-uniform vec2 u_resolution;
-uniform float u_time;
-
 vec2 rotate2D (vec2 _st, float _angle) {
     _st -= 0.5;
     _st =  mat2(cos(_angle),-sin(_angle),
@@ -65,11 +37,8 @@ vec2 rotate2D (vec2 _st, float _angle) {
     return _st;
 }
 
-vec2 tile (vec2 _st, float _zoom) {
-    _st *= _zoom;
-    return fract(_st);
-}
 
+//from book of shaders chapter 9 
 vec2 rotateTilePattern(vec2 _st){
 
     //  Scale the coordinate system by 2x2
@@ -107,24 +76,22 @@ vec2 rotateTilePattern(vec2 _st){
     return _st;
 }
 
-float circle(vec2 _st, float _radius){
-    vec2 pos = vec2(0.5)-_st;
-    return smoothstep(1.0-_radius,1.0-_radius+_radius*0.2,1.-dot(pos,pos)*3.14);
+
+void main() {
+	vec2 st = gl_FragCoord.xy/u_resolution;
+    vec3 color = vec3(0.0);
+
+    st = createTile(st, 3.0, 3.0);
+    vec2 innerCircleSt = createTile(st, 3.0, 3.0);
+    
+    innerCircleSt = rotate2D(innerCircleSt, (atan(u_time * 20.0)));
+    innerCircleSt = rotateTilePattern(innerCircleSt);
+    innerCircleSt = rotate2D(innerCircleSt, (cos(u_time * PI / 4.0)));
+
+    color = vec3(circle(st,0.364, 0.580,0.490));
+    
+    vec3 innerCircleColor = vec3(circle(innerCircleSt, 0.2, 0.510,0.020));
+
+    //vec3 innerCircleColor = vec3(box(st,vec2(0.920,0.890),0.01));
+	gl_FragColor = vec4((vec3(0.450,0.600,0.324) + color) * (vec3(0.865,0.297,0.239) + innerCircleColor),1.0);
 }
-
-void main (void) {
-    vec2 st = gl_FragCoord.xy/u_resolution.xy;
-
-    st = tile(st,3.0);
-    st = rotateTilePattern(st);
-
-    // Make more interesting combinations
-     st = tile(st,3.0);
-     st = st + ((tan(u_time) * 0.492));
-     st = st + ((cos(u_time) * 0.5));
-
-    // step(st.x,st.y) just makes a b&w triangles
-    // but you can use whatever design you want.
-    gl_FragColor = vec4(vec3(circle(st, 0.492)),1.0);
-}
-*/
