@@ -92,28 +92,24 @@ float box(in vec2 _st, in vec2 _size){
 
 void main() {
 	vec2 st = gl_FragCoord.xy/u_resolution;
-    vec3 color = vec3(0.970,0.970,0.970);
+    vec3 color = vec3(0, 0, 0);
 
     st = createTile(st, 3.0, 3.0);
     
     vec2 outerCircleSt = st; 
-    
-    vec3 outerCircleColor = vec3(circle(outerCircleSt, 0.5, 0.494, 0.484));
-    vec2 innerCircleSt = createTile(st, 2.0, 2.0);
+    vec2 squareSt = st;
     
     //st = rotateTilePattern(st);
+    color += mix(vec3(0.146,0.233,0.405), vec3(0.330,0.243,0.730), circle(outerCircleSt, 0.5, 0.494, 0.484));
+
+    color += mix(color, vec3(0.046,0.245,0.226), box(squareSt, vec2(0.1,0.1)));
     
-    vec2 squareSt = st;
-    vec3 squareColor = vec3(box(squareSt, vec2(0.1,0.1)));
-    
+    vec2 innerCircleSt = createTile(st, 2.0, 2.0);
     innerCircleSt = rotateTilePattern(innerCircleSt);
     innerCircleSt = rotate2D(innerCircleSt,  ( 0.5 * (cos(u_time * PI / 2.0) + 1.8) ));
     innerCircleSt = rotateTilePattern(innerCircleSt);
 
-    color = mix(color, outerCircleColor, squareColor);
+    color += mix(color, vec3(0.650,0.307,0.130), circle(innerCircleSt, 0.2, 0.958,0.372));
     
-    vec3 innerCircleColor = vec3(circle(innerCircleSt, 0.2, 0.958,0.372));
-
-    //vec3 innerCircleColor = vec3(box(st,vec2(0.920,0.890),0.01));
-    gl_FragColor = vec4(color * (vec3(0.450,0.600,1.324) + outerCircleColor) * vec3(0.865,0.297,0.239) * (vec3(1.0, 1.0, 1.0) + squareColor) * (vec3(0.870,0.929,1.000) + innerCircleColor), 1.0);
+    gl_FragColor = vec4(color,1.0);
 }
