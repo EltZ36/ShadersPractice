@@ -159,7 +159,7 @@ const patternSketch = (p) => {
     p.background(220);
     p.shader(patternShader);
     patternShader.setUniform("u_resolution", [p.width, p.height]);
-    patternShader.setUniform("u_time", p.millis() / 3000.0);
+    patternShader.setUniform("u_time", p.millis() / 1000.0);
     p.plane(1, 1);
   };
 };

@@ -76,22 +76,44 @@ vec2 rotateTilePattern(vec2 _st){
     return _st;
 }
 
+//box code from book of shaders on https://thebookofshaders.com/08/ 
+float box(in vec2 _st, in vec2 _size){
+    _size = vec2(0.5) - _size*0.5;
+    vec2 uv = smoothstep(_size,
+                        _size+vec2(0.001),
+                        _st);
+    uv *= smoothstep(_size,
+                    _size+vec2(0.001),
+                    vec2(1.0)-_st);
+    return uv.x*uv.y;
+}
+
+
 
 void main() {
 	vec2 st = gl_FragCoord.xy/u_resolution;
-    vec3 color = vec3(0.0);
+    vec3 color = vec3(0.970,0.970,0.970);
 
     st = createTile(st, 3.0, 3.0);
-    vec2 innerCircleSt = createTile(st, 3.0, 3.0);
     
-    innerCircleSt = rotate2D(innerCircleSt, (atan(u_time * 20.0)));
+    vec2 outerCircleSt = st; 
+    
+    vec3 outerCircleColor = vec3(circle(outerCircleSt, 0.5, 0.494, 0.484));
+    vec2 innerCircleSt = createTile(st, 2.0, 2.0);
+    
+    //st = rotateTilePattern(st);
+    
+    vec2 squareSt = st;
+    vec3 squareColor = vec3(box(squareSt, vec2(0.1,0.1)));
+    
     innerCircleSt = rotateTilePattern(innerCircleSt);
-    innerCircleSt = rotate2D(innerCircleSt, (cos(u_time * PI / 4.0)));
+    innerCircleSt = rotate2D(innerCircleSt,  ( 0.5 * (cos(u_time * PI / 2.0) + 1.8) ));
+    innerCircleSt = rotateTilePattern(innerCircleSt);
 
-    color = vec3(circle(st,0.364, 0.580,0.490));
+    color = mix(color, outerCircleColor, squareColor);
     
-    vec3 innerCircleColor = vec3(circle(innerCircleSt, 0.2, 0.510,0.020));
+    vec3 innerCircleColor = vec3(circle(innerCircleSt, 0.2, 0.958,0.372));
 
     //vec3 innerCircleColor = vec3(box(st,vec2(0.920,0.890),0.01));
-	gl_FragColor = vec4((vec3(0.450,0.600,0.324) + color) * (vec3(0.865,0.297,0.239) + innerCircleColor),1.0);
+    gl_FragColor = vec4(color * (vec3(0.450,0.600,1.324) + outerCircleColor) * vec3(0.865,0.297,0.239) * (vec3(1.0, 1.0, 1.0) + squareColor) * (vec3(0.870,0.929,1.000) + innerCircleColor), 1.0);
 }
