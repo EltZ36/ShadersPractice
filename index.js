@@ -68,7 +68,7 @@ const lineSketch = (p) => {
   p.setup = async () => {
     p.createCanvas(400, 400, p.WEBGL);
     lineShader = await p.loadShader(
-      "./vertexShaders/plotLine.vert",
+      "./vertexShaders/general.vert",
       "./fragShaders/plotLine.frag"
     );
   };
@@ -91,7 +91,7 @@ const gradientSketch = (p) => {
   p.setup = async () => {
     p.createCanvas(400, 400, p.WEBGL);
     gradientShader = await p.loadShader(
-      "./vertexShaders/gradient.vert",
+      "./vertexShaders/general.vert",
       "./fragShaders/gradient.frag"
     );
   };
@@ -111,7 +111,7 @@ const shapeSketch = (p) => {
   p.setup = async () => {
     p.createCanvas(400, 400, p.WEBGL);
     shapeShader = await p.loadShader(
-      "./vertexShaders/shape.vert",
+      "./vertexShaders/general.vert",
       "./fragShaders/shape.frag"
     );
   };
@@ -132,7 +132,7 @@ const matrixSketch = (p) => {
   p.setup = async () => {
     p.createCanvas(400, 400, p.WEBGL);
     matrixShader = await p.loadShader(
-      "./vertexShaders/matrix.vert",
+      "./vertexShaders/general.vert",
       "./fragShaders/matrix.frag"
     );
   };
@@ -151,7 +151,7 @@ const patternSketch = (p) => {
   p.setup = async () => {
     p.createCanvas(400, 400, p.WEBGL);
     patternShader = await p.loadShader(
-      "./vertexShaders/pattern.vert",
+      "./vertexShaders/general.vert",
       "./fragShaders/pattern.frag"
     );
   };
@@ -164,9 +164,29 @@ const patternSketch = (p) => {
   };
 };
 
+const randomSketch = (p) => {
+  let randomShader;
+
+  p.setup = async () => {
+    p.createCanvas(400, 400, p.WEBGL);
+    randomShader = await p.loadShader(
+      "./vertexShaders/general.vert",
+      "./fragShaders/random.frag"
+    );
+  };
+  p.draw = () => {
+    p.background(220);
+    p.shader(randomShader);
+    randomShader.setUniform("u_resolution", [p.width, p.height]);
+    randomShader.setUniform("u_time", p.millis() / 1000.0);
+    p.plane(1, 1);
+  };
+};
+
 new p5(simpleSketch, "simpleSketchCanvas");
 new p5(lineSketch, "lineSketchCanvas");
 new p5(gradientSketch, "gradientSketchCanvas");
 new p5(shapeSketch, "shapeSketchCanvas");
 new p5(matrixSketch, "matrixSketchCanvas");
 new p5(patternSketch, "patternSketchCanvas");
+new p5(randomSketch, "randomSketchCanvas");
