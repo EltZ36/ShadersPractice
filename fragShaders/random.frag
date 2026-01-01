@@ -8,10 +8,11 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 
+
 float random (in vec2 _st) {
     return fract(sin(dot(_st.xy,
                          vec2(12.9898,78.233)))*
-        43758.5453123);
+        u_time / 0.5);
 }
 
 vec2 rotate2D(vec2 _st, float _angle){
@@ -45,11 +46,11 @@ void main() {
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
     
     //multipying st increases the grid space that you have on the canvas
-    st *= 5.0;
+    st *= 100.0;
     
     //st = createTile(st, 1.0, 2.0);
  	
-    st += u_time*0.5;
+    //st += cos(u_time)*0.5;
 
     vec2 ipos = floor(st);  // integer
     vec2 fpos = fract(st);  // fraction
@@ -60,7 +61,8 @@ void main() {
     //color = step(tile.x,tile.y); 
     //color = vec3(fpos,0.0);
     vec3 color = vec3(0.0, 0.0, 0.0);
-    color += mix(vec3(0.010,0.010,0.010), vec3(0.986,1.000,0.989),  box( vec2 (random(st), random(st)) , vec2(0.190,0.730) ));
+    color += mix(vec3(random(ipos) ,random(fpos),0.524), vec3(0.865,0.960,0.889),  box( vec2 (random(ipos), random(ipos)) , vec2(0.340,0.700) ));
     //gl_FragColor = vec4(vec3(fpos,0.0),1.0);
     gl_FragColor = vec4(vec3(color),1.0);
 }
+
