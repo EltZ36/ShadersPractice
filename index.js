@@ -183,6 +183,25 @@ const randomSketch = (p) => {
   };
 };
 
+const noiseSketch = (p) => {
+  let noiseShader;
+
+  p.setup = async () => {
+    p.createCanvas(400, 400, p.WEBGL);
+    noiseShader = await p.loadShader(
+      "./vertexShaders/general.vert",
+      "./fragShaders/noise.frag"
+    );
+  };
+  p.draw = () => {
+    p.background(220);
+    p.shader(noiseShader);
+    noiseShader.setUniform("u_resolution", [p.width, p.height]);
+    noiseShader.setUniform("u_time", p.millis() / 1000.0);
+    p.plane(1, 1);
+  };
+};
+
 new p5(simpleSketch, "simpleSketchCanvas");
 new p5(lineSketch, "lineSketchCanvas");
 new p5(gradientSketch, "gradientSketchCanvas");
@@ -190,3 +209,4 @@ new p5(shapeSketch, "shapeSketchCanvas");
 new p5(matrixSketch, "matrixSketchCanvas");
 new p5(patternSketch, "patternSketchCanvas");
 new p5(randomSketch, "randomSketchCanvas");
+new p5(noiseSketch, "noiseSketchCanvas");
