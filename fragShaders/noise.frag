@@ -6,6 +6,8 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 
+#define PI 3.14159265359
+
 // 2D Random
 float random (in vec2 st) {
     return fract(sin(dot(st.xy,
@@ -31,7 +33,7 @@ float noise (in vec2 st) {
     vec2 u = f*f*(3.0-2.0*f);
     // u = smoothstep(0.,1.,f);
 
-    // Mix 4 coorners percentages
+    // Mix 4 corners percentages
     return mix(a, b, u.x) +
             (c - a)* u.y * (1.0 - u.x) +
             (d - b) * u.x * u.y;
@@ -43,14 +45,15 @@ void main() {
     // Scale the coordinate system to see
     // some noise in action
     vec2 pos = vec2(st*100.0);
-    pos.x = pos.x + (u_time * 50.0);
+    //pos.x = pos.x + (u_time * 50.0);
     
     // Use the noise function
-    float n = noise( pos);
+    float p = abs(sin(u_time * 0.5));
+    float n = p + noise( pos +  u_time) * 2.0;
     vec2 noiseVec = vec2(n);
     //float gradient = mix(0.5, 0.036, n);  
-	float distanceField = distance(st, noiseVec);
-    vec3 mixedColor = mix(vec3(0.268,0.695,0.608),vec3(0.441,0.066,0.695), distanceField * abs(sin(u_time)));
+	//float distanceField = distance(st, noiseVec);
+    vec3 mixedColor = mix(vec3(0.716,0.840,0.316),vec3(0.473,0.657,0.810), noiseVec.x);
 
     gl_FragColor = vec4(mixedColor, 1.120);
 }

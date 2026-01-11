@@ -197,7 +197,7 @@ const noiseSketch = (p) => {
     p.background(220);
     p.shader(noiseShader);
     noiseShader.setUniform("u_resolution", [p.width, p.height]);
-    noiseShader.setUniform("u_time", p.millis() / 1000.0);
+    noiseShader.setUniform("u_time", p.millis() / 900.0);
     p.plane(1, 1);
   };
 };
